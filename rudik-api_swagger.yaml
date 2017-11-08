@@ -1,0 +1,523 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: RuDiK 1.0 Async APIs
+  description: Collection of APIs for inducing declarative rules with RuDiK and few others utility methods for RDF knowledge graphs accesible via a SPARQL endpoint.
+  contact:
+    name: Stefano Ortona - Wrapidity Team
+    email: stefano.ortona@meltwater.com
+    url: http://www.wrapidity.com
+host: localhost:8100
+basePath: /v1/apis/rudik
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /_status:
+    get:
+      summary: Status of APIs
+      description: Retrieves the status of the APIs 
+      operationId: statusAPI
+      parameters:
+        - name: full
+          in: query
+          description: Return the curren status of the API.
+          required: false
+          type: boolean
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: The API is up and running
+          schema:
+            $ref: '#/definitions/APIStatus'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'  
+  /rule/mine:
+    post:
+      summary: Horn Rules Mining
+      description: Triggers the induction of a set of logical rules for the given knwoledge graph and a target predicate. The call is asynchronous, and the computed rules will be stored and they can be retrieved as soon as the mining is complete.
+      operationId: mineRule
+      produces:
+        - application/json
+      tags:
+        - rule
+      parameters:
+        - name: rule_specification
+          in: body
+          description: Specifies the predicate and mining parametets for rule induction.
+          required: true
+          schema:
+            $ref: '#/definitions/RuleSpecification'
+      responses:
+        '200':
+          description: The request has been successfully received and the mining process has ended with results returned.
+          schema:
+            $ref: '#/definitions/RuleResult'
+        '202':
+          description: The request has been successfully received and the mining process has started.
+          schema:
+            $ref: '#/definitions/RuleStatus'
+        '404':
+          description: The input rule specification is not valid.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '416':
+          description: The request has been received but the current endpoint is busy processing another request.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  /rule/instantiate:
+    post:
+      summary: Horn Rules Instantiation over the Graph
+      description: Instantiate the given rule over the graph to compute new generated facts in case of positive rules, or potential erroneous triples in case of negative rules.
+      operationId: instantiateRule
+      produces:
+        - application/json
+      tags:
+        - rule
+      parameters:
+        - name: rule_specification
+          in: body
+          description: Specifies the input rule to be instantiated over the graph
+          required: true
+          schema:
+            $ref: '#/definitions/RuleResult'
+      responses:
+        '200':
+          description: The request has been successfully received and the facts instantiated over the graph have been returned.
+          schema:
+            $ref: '#/definitions/RuleInstantiation'
+        '404':
+          description: The input rule specification is not valid.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '408':
+          description: The input request went in timeout. This most likely happens when the SPARQL endpoint is not able of instantiating the input rule over the graph.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  /example/generation:
+    post:
+      summary: Positive and Negative Example Generation
+      description: Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used.
+      operationId: exampleGeneration
+      produces:
+        - application/json
+      tags:
+        - example
+      parameters:
+        - name: predicate_specification
+          in: body
+          description: Specifies the input target predicate for which positive and negative examples will be generated. 
+          required: true
+          schema:
+            $ref: '#/definitions/RuleSpecification'
+      responses:
+        '200':
+          description: The request has been successfully received and the positive and negative examples have been returned.
+          schema:
+            $ref: '#/definitions/RuleExample'
+        '404':
+          description: The input rule specification is not valid.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '408':
+          description: The input request went in timeout. This most likely happens when the SPARQL endpoint is not able of producing positive and/or negative examples with customised heuristics.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/ErrorModel' 
+  /example/type:
+    post:
+      summary: Most Common Type Example Generation
+      description: Generate most common types for subject and object examples for the given input target predicate according to the graph.
+      operationId: exampleType
+      produces:
+        - application/json
+      tags:
+        - example
+      parameters:
+        - name: predicate_specification
+          in: body
+          description: Specifies the input target predicate for which most common types for subject and object will be generated. 
+          required: true
+          schema:
+            $ref: '#/definitions/RuleSpecification'
+      responses:
+        '200':
+          description: The request has been successfully received and the most common types for both subject and object have been returned.
+          schema:
+            $ref: '#/definitions/EntityPair'
+        '404':
+          description: The input rule specification is not valid.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '408':
+          description: The input request went in timeout. This most likely happens when the SPARQL endpoint is not able of producing most common types for either subject or object.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+definitions:
+  APIStatus:
+    type: object
+    properties:
+      status:
+        type: string
+        description: "Status code for the API"
+      description:
+        type: string
+        description: "Textual description of the status"
+      metadata:
+        type: array
+        description: "Metadata includes things like the time of creation, the version of the induction system, …"
+        items:
+          $ref: '#/definitions/KeyValuePair'
+  ErrorModel:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+  KeyValuePair:
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+  RuleSpecification:
+    type: object
+    required:
+      - targetRelation
+      - graph
+      - type
+    properties:
+      id:
+        type: string
+        description: "ID for the target predicate on the current graph. Derived from the target predicates, the type mining and the current graph. Currently <hash(RuleSpecification)+hash(GraphSpecification)>"
+      targetRelation:
+        type: array
+        description: "URLs from which to start the crawling of the site, usually section pages."
+        items:
+          type: string
+      type:
+        type: string
+        enum: 
+          - positive
+          - negative
+        description: "Decide to mine positive or negative rule for the target predicates."
+      graph:
+        $ref: '#/definitions/GraphSpecification'
+      maxLength:
+        type: integer
+        description: "Maximum number of atoms in the body of the rule."
+      subjectType:
+        type: string
+        description: "Graph type of the subject entity of the head of the rule. If not specified, the most common one from the graph will be used."
+      objectType:
+        type: string
+        description: "Graph type of the object entity of the head of the rule. If not specified, the most common one from the graph will be used."
+      positiveExamples:
+        type: array
+        description: "Positive example pairs used for induction. If not provided, they will be computed from the graph using custom heuristics."
+        items:
+          $ref: '#/definitions/EntityPair'
+      negativeExamples:
+        type: array
+        description: "Negative example pairs used for induction. If not provided, they will be computed from the graph using custom heuristics."
+        items:
+          $ref: '#/definitions/EntityPair'
+      resultEndpoint:
+        description: "URL where the information about this specific mined rules can be retrieved from."
+        type: string
+        format: url
+      metadata:
+        type: array
+        description: "Metadata includes things like the time of creation, the version of the induction system, …"
+        items:
+          $ref: '#/definitions/KeyValuePair'
+  GraphSpecification:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: string
+        description: "ID for the current graph. Derived from properties of the current mining configuration and graph name. Currently <hash(GraphSpecification)>"
+      name:
+        type: string
+        enum: 
+          - yago
+          - dbpedia
+          - wikimeta
+          - freebase
+          - other
+        description: "Name of the knowledge graph to mine rules from. If chosen from known graphs, the mining will happen on the stored graphs. If 'other' is chosen, then an endpoint url must be provided to query the graph."
+      endpoint:
+        type: string
+        format: url
+        description: "Sparql endpoint to query the give knowledge graph."
+      iri:
+        type: string
+        format: url
+        description: "Graph iri."
+      prefix:
+        type: array
+        description: "RDF prefixes to be specified when running SPARQL queries."
+        items:
+          $ref: '#/definitions/RelationPrefix'
+      targetPrefix:
+        type: string
+        description: "If specified, all relations used in the mining must start with this prefix."
+      avoidRelation: 
+        type: array
+        description: "Relations to avoid during the mining."
+        items:
+          type: string
+      typePrefix:
+        type: array
+        description: "Relation prefixes to be used as type for entities."
+        items:
+          type: string
+      disequalityRelation:
+        type: integer
+        description: "Specify here the number of type-relations two entities must have in common to be considered of the same type. 0 means all types, while a negative number means two entities will be never considered of the same type."
+      alpha:
+        type: number
+        format: double
+        description: "Adjust alph to get more rules in output with less accuracy. Alpha can be between 0 and 1, and alpha+beta=1."
+      beta:
+        type: number
+        format: double
+        description: "Adjust beta to get less rules in output with higher accuracy. Beta can be between 0 and 1, and alpha+beta=1."
+      incomingEdges:
+        type: integer
+        description: "Set the maximum number of incoming edges for an entity during the mining exploration."
+      outgoingEdges:
+        type: integer
+        description: "Set the maximum number of outgoing edges for an entity during the mining exploration."
+      positiveExamplesLimit:
+        type: integer
+        description: "Set the limit for the maximum number of positive examples."
+      negativeExamplesLimit:
+        type: integer
+        description: "Set the limit for the maximum number of negative examples."
+      literal:
+        type: boolean
+        description: "Include(true)/exclude(false) literal values from the mining."
+  RelationPrefix:
+    type: object
+    required:
+      - name
+      - uri
+    properties:
+      name:
+        type: string
+        description: "Name to assign to the current RDF prefix."
+      uri:
+        type: string
+        description: "URI of the prefix"
+  RuleStatus: 
+    type: object
+    required:
+      - rule
+      - status
+    properties:
+      rule:
+        $ref: '#/definitions/RuleSpecification'
+      status: 
+        $ref: '#/definitions/Status'
+      metadata:
+        type: array
+        description: "Metadata includes things like the time of creation, the version of the induction system, …"
+        items:
+          $ref: '#/definitions/KeyValuePair'
+  Status:
+    type: object
+    required:
+      - code
+      - description
+    properties:
+      code:
+        type: string
+      description:
+        type: string 
+  RuleResult:
+    type: object
+    required:
+      - id
+      - specification
+      - rule
+    properties:
+      id:
+        type: string
+        description: "ID of the rule result. Currently same one used for the RuleSpecification+TimeStamp of retrieval."
+      specification:
+        $ref: '#/definitions/RuleSpecification'
+      statistics:
+        $ref: '#/definitions/RuleStatistics'
+      rule:
+        description: "Output logical body rules produced by RuDiK including their statistics."
+        type: array
+        items:
+          $ref: '#/definitions/HornRule'
+      metadata:
+        type: array
+        description: "Metadata includes things like the time of creation, the version of the induction system, …"
+        items:
+          $ref: '#/definitions/KeyValuePair'
+  RuleStatistics:
+    type: object
+    properties:
+      subgraphNodes:
+        type: integer
+        description: "Total number of nodes visited in the generated subgraph for the induction."
+      subgraphEdges:
+        type: integer
+        description: "Total number of edges visited in the generated subgraph for the induction."
+      validationTotTime:
+        type: number
+        format: double
+        description: "Total time spent for executing validation queries in seconds."
+      validationAvgTime:
+        type: number
+        format: double
+        description: "Average time spent for executing validation queries in seconds."
+      validationQueries:
+        type: integer
+        description: "Total number of executed validation queries."
+      expansionTotTime:
+        type: number
+        format: double
+        description: "Total time spent for executing expansion queries in seconds."
+      expansionAvgTime:
+        type: number
+        format: double
+        description: "Average time spent for executing expansion queries in seconds."
+      positiveExamplesTime:
+        type: number
+        format: double
+        description: "Total time in seconds spent for generating positive examples."
+      negativeExamplesTime:
+        type: number
+        format: double
+        description: "Total time in seconds spent for generating negative examples."
+      runTime:
+        type: number
+        format: double
+        description: "Total running time in seconds spent for rules induction."
+  EntityPair:
+    type: object
+    required:
+      - subject
+      - object
+    properties:
+      subject:
+        type: string
+        description: "Subject entity of the entity pair."
+      object:
+        type: string
+        description: "Object entity of the entity pair."
+  HornRule:
+    type: object
+    required:
+      - body
+    properties:
+      body:
+        $ref: '#/definitions/HornRuleBody'
+      generationCoverage:
+        type: array
+        description: "Generation examples covered by the rule."
+        items:
+          $ref: '#/definitions/EntityPair'
+      validationCoverage:
+        type: array
+        description: "Validation examples covered by the rule."
+        items:
+          $ref: '#/definitions/EntityPair'
+  HornRuleBody:
+    type: object
+    required:
+      - atom
+    properties:
+      atom:
+        type: array
+        description: "List of logical atoms which the body of the rule is made of."
+        items:
+          $ref: '#/definitions/HornRuleAtom'
+  HornRuleAtom:
+    type: object
+    required:
+      - predicate
+      - variablePair
+    properties:
+      predicate:
+        type: string
+        description: "Predicate of the horn rule atom."
+      variablePair:
+        $ref: '#/definitions/EntityPair'
+  RuleInstantiation:
+    type: object
+    required:
+      - specification
+      - instance
+    properties:
+      specification:
+        $ref: '#/definitions/RuleResult'
+      instance:
+        type: array
+        description: "A single instantation of the given input rule, where an array of variable bindigns assign to each varable in the rule an actual entity of the graph."
+        items:
+          $ref: '#/definitions/VariableBinding'
+  VariableBinding:
+    type: object
+    required:
+      - binding
+    properties:
+      binding:
+        type: array
+        description: "A binding between a variable expressed in the subject, and an actual entity expressed in the object."
+        items:
+          $ref: '#/definitions/EntityPair'
+  RuleExample:
+    type: object
+    required:
+      - positive
+      - negative
+    properties:
+      positive:
+        type: array
+        description: "Set of positive examples."
+        items:
+          $ref: '#/definitions/EntityPair'
+      negative:
+        type: array
+        description: "Set of negative examples."
+        items:
+          $ref: '#/definitions/EntityPair'
