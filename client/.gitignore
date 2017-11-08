@@ -1,0 +1,5 @@
+/target/
+.classpath
+.project
+.settings
+.swagger-codegen-ignore
