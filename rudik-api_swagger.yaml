@@ -111,7 +111,7 @@ paths:
   /example/generation:
     post:
       summary: Positive and Negative Example Generation
-      description: Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used.
+      description: Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used. If more than one target relation is specified, then only the first predicate will be used for the generation.
       operationId: exampleGeneration
       produces:
         - application/json
@@ -129,7 +129,7 @@ paths:
           description: The request has been successfully received and the positive and negative examples have been returned.
           schema:
             $ref: '#/definitions/RuleExample'
-        '404':
+        '412':
           description: The input rule specification is not valid.
           schema:
             $ref: '#/definitions/ErrorModel'
@@ -198,7 +198,6 @@ definitions:
     properties:
       code:
         type: integer
-        format: int64
       message:
         type: string
   KeyValuePair:
@@ -223,7 +222,7 @@ definitions:
         description: "ID for the target predicate on the current graph. Derived from the target predicates, the type mining and the current graph. Currently <hash(RuleSpecification)+hash(GraphSpecification)>"
       targetRelation:
         type: array
-        description: "URLs from which to start the crawling of the site, usually section pages."
+        description: "Array of target predicates to use as target predicates for the mining."
         items:
           type: string
       type:
