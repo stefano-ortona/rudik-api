@@ -10,7 +10,7 @@ import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
+import asu.edu.rule_miner.api.impl.configuration.ConfigurationFacility;
 
 public class Main {
 
@@ -22,7 +22,8 @@ public class Main {
   }
 
   public static void main(final String[] args) throws Exception {
-    ConfigurationFacility.getConfiguration();
+    // initialise configuration
+    ConfigurationFacility.getInstance();
     try {
       Log.setLog(new Slf4jLog());
 
@@ -35,6 +36,7 @@ public class Main {
   public void run() throws Exception {
 
     final Server server = new Server(PORT);
+    // initialise configuration
 
     // Setup the basic Application "context" at "/".
     // This is also known as the handler tree (in Jetty speak).

@@ -1,0 +1,6 @@
+{
+	"modelPackage": "asu.edu.rule_miner.api.model",
+	"apiPackage" : "asu.edu.rule_miner.api.api",
+	"invokerPackage" : "asu.edu.rule_miner.api.service",
+	"library": "jersey2"
+}

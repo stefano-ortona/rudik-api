@@ -30,7 +30,7 @@ import asu.edu.rule_miner.api.service.Pair;
 import java.util.Map;
 import java.util.List;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-08T13:58:07.522Z")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-24T18:17:08.173Z")
 public class OAuth implements Authentication {
   private String accessToken;
 

@@ -7,15 +7,15 @@ import asu.edu.rule_miner.api.service.Pair;
 
 import javax.ws.rs.core.GenericType;
 
-import asu.edu.api.model.ErrorModel;
-import asu.edu.api.model.APIStatus;
+import asu.edu.rule_miner.api.model.ErrorModel;
+import asu.edu.rule_miner.api.model.APIStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-08T13:58:07.522Z")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-24T18:17:08.173Z")
 public class DefaultApi {
   private ApiClient apiClient;
 
@@ -38,7 +38,7 @@ public class DefaultApi {
   /**
    * Status of APIs
    * Retrieves the status of the APIs
-   * @param full Return the curren status of the API. (optional)
+   * @param full Return the current status of the API. (optional)
    * @return APIStatus
    * @throws ApiException if fails to make API call
    */

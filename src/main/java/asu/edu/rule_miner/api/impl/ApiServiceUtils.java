@@ -5,10 +5,11 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asu.edu.api.model.GraphSpecification;
 import asu.edu.rule_miner.api.RudikApiException;
 import asu.edu.rule_miner.api.impl.configuration.ConfigurationHelper;
 import asu.edu.rule_miner.api.impl.utils.RudikApiUtils;
+import asu.edu.rule_miner.api.model.GraphSpecification;
+import asu.edu.rule_miner.api.model.RuleSpecification;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 
 public class ApiServiceUtils {
@@ -30,6 +31,10 @@ public class ApiServiceUtils {
       return RudikApiUtils.errorResponseFrom(Response.Status.PRECONDITION_FAILED, e.getMessage());
     }
     return null;
+  }
+
+  public static void setConfigurationParameter(final RuleSpecification ruleSpec) {
+    CONF_HELPER.convertSpecificationConfiguration(ruleSpec);
   }
 
 }

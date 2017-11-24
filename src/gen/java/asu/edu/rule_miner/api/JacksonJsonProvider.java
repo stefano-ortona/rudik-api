@@ -1,19 +1,20 @@
 package asu.edu.rule_miner.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import io.swagger.util.Json;
-
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-@Provider
-@Produces({MediaType.APPLICATION_JSON})
-public class JacksonJsonProvider extends JacksonJaxbJsonProvider {
-    private static ObjectMapper commonMapper = Json.mapper();
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
-    public JacksonJsonProvider() {
-        super.setMapper(commonMapper);
-    }
+import asu.edu.rule_miner.api.impl.utils.JsonMapperUtils;
+
+@Provider
+@Produces({ MediaType.APPLICATION_JSON })
+public class JacksonJsonProvider extends JacksonJaxbJsonProvider {
+  private static ObjectMapper commonMapper = JsonMapperUtils.getMapper();
+
+  public JacksonJsonProvider() {
+    super.setMapper(commonMapper);
+  }
 }

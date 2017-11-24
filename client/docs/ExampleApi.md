@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 Positive and Negative Example Generation
 
-Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used.
+Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used. If more than one target relation is specified, then only the first predicate will be used for the generation.
 
 ### Example
 ```java

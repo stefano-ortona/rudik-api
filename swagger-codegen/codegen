@@ -1,0 +1,5 @@
+#!/bin/sh
+# --- Generated file, will be overwritten by fetch.sh ---
+# Runs SWAGGER code generator 
+
+java -jar swagger-codegen-cli.jar $@

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rule_miner xml:space="preserve">
+	<rudik>
+		<api>
+		<!-- Application configuration parameter for RuDiK API service -->
+			<service
+	config-class="asu.edu.rule_miner.api.impl.configuration.RuleMinerApiConfiguration"
+	bucketName="${env:RULES_S3_BUCKET}" credentialsFile="src/main/config/s3_credentials"
+	fileExtension="json" s3Regions="EU_WEST_1">
+			</service>
+		</api>
+		</rudik>
+</rule_miner>

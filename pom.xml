@@ -45,12 +45,12 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.6</version>
 		</dependency>
-		
+
 		<!-- Amazon client dependency -->
 		<dependency>
-		    <groupId>com.amazonaws</groupId>
-		    <artifactId>aws-java-sdk</artifactId>
-		    <version>1.11.231</version>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.11.231</version>
 		</dependency>
 
 		<!-- RESTEasy runtime dependencies -->
@@ -126,7 +126,7 @@
 			<artifactId>swagger-jaxrs</artifactId>
 			<version>1.5.13</version>
 		</dependency>
-		
+
 		<!-- lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -140,6 +140,19 @@
 			<groupId>asu.edu</groupId>
 			<artifactId>rule_miner</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Json Conversion Utility -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jdk8</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.6.3</version>
 		</dependency>
 
 	</dependencies>

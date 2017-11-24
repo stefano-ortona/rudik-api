@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/rule_miner.api/src/main/java/asu/edu/rule_miner/api/Main.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables">
+<mapEntry key="APPLICATION_CONFIGURATION" value="src/main/config/ApplicationConfiguration.xml"/>
+<mapEntry key="RULES_S3_BUCKET" value="fhai-rudik-output-rules"/>
+<mapEntry key="DBPEDIA_SPARQL_ENDPOINT" value="http://dbpedia.org/sparql"/>
+<mapEntry key="FREEBASE_SPARQL_ENDPOINT" value="http://localhost:8890/sparql"/>
+<mapEntry key="YAGO_SPARQL_ENDPOINT" value="https://io.datascience-paris-saclay.fr/sparql"/>
+<mapEntry key="WIKIDATA_SPARQL_ENDPOINT" value="https://query.wikidata.org/"/>
+</mapAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="asu.edu.rule_miner.api.Main"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="rule_miner.api"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+</launchConfiguration>

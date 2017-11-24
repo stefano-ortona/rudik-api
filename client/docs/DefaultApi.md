@@ -23,7 +23,7 @@ Retrieves the status of the APIs
 
 
 DefaultApi apiInstance = new DefaultApi();
-Boolean full = true; // Boolean | Return the curren status of the API.
+Boolean full = true; // Boolean | Return the current status of the API.
 try {
     APIStatus result = apiInstance.statusAPI(full);
     System.out.println(result);
@@ -37,7 +37,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **full** | **Boolean**| Return the curren status of the API. | [optional]
+ **full** | **Boolean**| Return the current status of the API. | [optional]
 
 ### Return type
 

@@ -2,7 +2,7 @@ package asu.edu.rule_miner.api.impl.utils;
 
 import javax.ws.rs.core.Response;
 
-import asu.edu.api.model.ErrorModel;
+import asu.edu.rule_miner.api.model.ErrorModel;
 
 public class RudikApiUtils {
 

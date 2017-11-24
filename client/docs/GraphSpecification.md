@@ -9,9 +9,9 @@ Name | Type | Description | Notes
 **endpoint** | **String** | Sparql endpoint to query the give knowledge graph. |  [optional]
 **iri** | **String** | Graph iri. |  [optional]
 **prefix** | [**List&lt;RelationPrefix&gt;**](RelationPrefix.md) | RDF prefixes to be specified when running SPARQL queries. |  [optional]
-**targetPrefix** | **String** | If specified, all relations used in the mining must start with this prefix. |  [optional]
+**targetPrefix** | **List&lt;String&gt;** | If specified, all relations used in the mining must start with one of these prefixes. |  [optional]
 **avoidRelation** | **List&lt;String&gt;** | Relations to avoid during the mining. |  [optional]
-**typePrefix** | **List&lt;String&gt;** | Relation prefixes to be used as type for entities. |  [optional]
+**typePrefix** | **String** | Relation to be used as type-relation when discovering types for entities. |  [optional]
 **disequalityRelation** | **Integer** | Specify here the number of type-relations two entities must have in common to be considered of the same type. 0 means all types, while a negative number means two entities will be never considered of the same type. |  [optional]
 **alpha** | **Double** | Adjust alph to get more rules in output with less accuracy. Alpha can be between 0 and 1, and alpha+beta&#x3D;1. |  [optional]
 **beta** | **Double** | Adjust beta to get less rules in output with higher accuracy. Beta can be between 0 and 1, and alpha+beta&#x3D;1. |  [optional]
@@ -20,6 +20,7 @@ Name | Type | Description | Notes
 **positiveExamplesLimit** | **Integer** | Set the limit for the maximum number of positive examples. |  [optional]
 **negativeExamplesLimit** | **Integer** | Set the limit for the maximum number of negative examples. |  [optional]
 **literal** | **Boolean** | Include(true)/exclude(false) literal values from the mining. |  [optional]
+**genericType** | **List&lt;String&gt;** | Generic abstract type to avoid when computing subject and object most common types for a given target predicate. |  [optional]
 
 
 <a name="NameEnum"></a>

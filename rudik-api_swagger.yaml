@@ -24,7 +24,7 @@ paths:
       parameters:
         - name: full
           in: query
-          description: Return the curren status of the API.
+          description: Return the current status of the API.
           required: false
           type: boolean
       produces:
@@ -41,7 +41,7 @@ paths:
   /rule/mine:
     post:
       summary: Horn Rules Mining
-      description: Triggers the induction of a set of logical rules for the given knwoledge graph and a target predicate. The call is asynchronous, and the computed rules will be stored and they can be retrieved as soon as the mining is complete.
+      description: Triggers the induction of a set of logical rules for the given knowledge graph and a target predicate. The call is asynchronous, and the computed rules will be stored and they can be retrieved as soon as the mining is complete, returning a 202. If the requested rules with same parameters have been computed before, then the rules are immediately returned with a 200.
       operationId: mineRule
       produces:
         - application/json
@@ -50,10 +50,15 @@ paths:
       parameters:
         - name: rule_specification
           in: body
-          description: Specifies the predicate and mining parametets for rule induction.
+          description: Specifies the predicate and mining parameters for rule induction.
           required: true
           schema:
             $ref: '#/definitions/RuleSpecification'
+        - name: forceMining
+          in: query
+          description: If set to true, then the mining of the rules is always forced no matter whether whether the target rules have been computed before.
+          required: false
+          type: boolean
       responses:
         '200':
           description: The request has been successfully received and the mining process has ended with results returned.
@@ -67,12 +72,12 @@ paths:
           description: The input rule specification is not valid.
           schema:
             $ref: '#/definitions/ErrorModel'
-        '416':
+        '503':
           description: The request has been received but the current endpoint is busy processing another request.
           schema:
             $ref: '#/definitions/ErrorModel'
         '500':
-          description: Unexpected error.
+          description: Returns a 500 if there was an error with from the server while mining rules for the given input rule specification.
           schema:
             $ref: '#/definitions/ErrorModel'
   /rule/instantiate:
@@ -252,6 +257,9 @@ definitions:
         description: "Negative example pairs used for induction. If not provided, they will be computed from the graph using custom heuristics."
         items:
           $ref: '#/definitions/EntityPair'
+      coverBound:
+        type: integer
+        description: "If set to a positive number greater than 0, then the endpoint will return the first coverBound number of rules, independently from the set cover. If set to a negative number or 0, the endpoint will return all the output rules independently from the set cover. If not set, the normal set cover algorithm will be run."
       resultEndpoint:
         description: "URL where the information about this specific mined rules can be retrieved from."
         type: string
@@ -292,18 +300,18 @@ definitions:
         items:
           $ref: '#/definitions/RelationPrefix'
       targetPrefix:
-        type: string
-        description: "If specified, all relations used in the mining must start with this prefix."
+        type: array
+        description: "If specified, all relations used in the mining must start with one of these prefixes."
+        items:
+          type: string
       avoidRelation: 
         type: array
         description: "Relations to avoid during the mining."
         items:
           type: string
       typePrefix:
-        type: array
-        description: "Relation prefixes to be used as type for entities."
-        items:
-          type: string
+        type: string
+        description: "Relation to be used as type-relation when discovering types for entities."
       disequalityRelation:
         type: integer
         description: "Specify here the number of type-relations two entities must have in common to be considered of the same type. 0 means all types, while a negative number means two entities will be never considered of the same type."
@@ -330,6 +338,11 @@ definitions:
       literal:
         type: boolean
         description: "Include(true)/exclude(false) literal values from the mining."
+      genericType:
+        type: array
+        description: "Generic abstract type to avoid when computing subject and object most common types for a given target predicate."
+        items:
+          type: string
   RelationPrefix:
     type: object
     required:
@@ -419,6 +432,9 @@ definitions:
         type: number
         format: double
         description: "Average time spent for executing expansion queries in seconds."
+      expansionQueries:
+        type: integer
+        description: "Total number of executed expansion queries."
       positiveExamplesTime:
         type: number
         format: double
@@ -460,6 +476,10 @@ definitions:
         description: "Validation examples covered by the rule."
         items:
           $ref: '#/definitions/EntityPair'
+      score:
+        type: number
+        format: double
+        description: "Confidence score given to output rules."
   HornRuleBody:
     type: object
     required:

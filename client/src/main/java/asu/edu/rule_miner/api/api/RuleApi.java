@@ -7,18 +7,18 @@ import asu.edu.rule_miner.api.service.Pair;
 
 import javax.ws.rs.core.GenericType;
 
-import asu.edu.api.model.RuleInstantiation;
-import asu.edu.api.model.ErrorModel;
-import asu.edu.api.model.RuleResult;
-import asu.edu.api.model.RuleSpecification;
-import asu.edu.api.model.RuleStatus;
+import asu.edu.rule_miner.api.model.RuleInstantiation;
+import asu.edu.rule_miner.api.model.ErrorModel;
+import asu.edu.rule_miner.api.model.RuleResult;
+import asu.edu.rule_miner.api.model.RuleSpecification;
+import asu.edu.rule_miner.api.model.RuleStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-08T13:58:07.522Z")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-24T18:17:08.173Z")
 public class RuleApi {
   private ApiClient apiClient;
 
@@ -81,12 +81,13 @@ public class RuleApi {
       }
   /**
    * Horn Rules Mining
-   * Triggers the induction of a set of logical rules for the given knwoledge graph and a target predicate. The call is asynchronous, and the computed rules will be stored and they can be retrieved as soon as the mining is complete.
-   * @param ruleSpecification Specifies the predicate and mining parametets for rule induction. (required)
+   * Triggers the induction of a set of logical rules for the given knowledge graph and a target predicate. The call is asynchronous, and the computed rules will be stored and they can be retrieved as soon as the mining is complete, returning a 202. If the requested rules with same parameters have been computed before, then the rules are immediately returned with a 200.
+   * @param ruleSpecification Specifies the predicate and mining parameters for rule induction. (required)
+   * @param forceMining If set to true, then the mining of the rules is always forced no matter whether whether the target rules have been computed before. (optional)
    * @return RuleResult
    * @throws ApiException if fails to make API call
    */
-  public RuleResult mineRule(RuleSpecification ruleSpecification) throws ApiException {
+  public RuleResult mineRule(RuleSpecification ruleSpecification, Boolean forceMining) throws ApiException {
     Object localVarPostBody = ruleSpecification;
     
     // verify the required parameter 'ruleSpecification' is set
@@ -102,6 +103,7 @@ public class RuleApi {
     Map<String, String> localVarHeaderParams = new HashMap<String, String>();
     Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+    localVarQueryParams.addAll(apiClient.parameterToPairs("", "forceMining", forceMining));
 
     
     

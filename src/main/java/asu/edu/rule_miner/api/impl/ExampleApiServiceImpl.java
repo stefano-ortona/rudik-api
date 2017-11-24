@@ -12,12 +12,12 @@ import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import asu.edu.api.model.EntityPair;
-import asu.edu.api.model.RuleExample;
-import asu.edu.api.model.RuleSpecification;
 import asu.edu.rule_miner.api.ExampleApiService;
 import asu.edu.rule_miner.api.NotFoundException;
 import asu.edu.rule_miner.api.impl.utils.RudikApiUtils;
+import asu.edu.rule_miner.api.model.EntityPair;
+import asu.edu.rule_miner.api.model.RuleExample;
+import asu.edu.rule_miner.api.model.RuleSpecification;
 import asu.edu.rule_miner.rudik.predicate.analysis.KBPredicateSelector;
 import asu.edu.rule_miner.rudik.predicate.analysis.SparqlKBPredicateSelector;
 import asu.edu.rule_miner.rudik.rule_generator.DynamicPruningRuleDiscovery;
@@ -67,6 +67,9 @@ public class ExampleApiServiceImpl extends ExampleApiService {
       posExamplesLimit = posExamplesLimit == null ? -1 : posExamplesLimit;
       Integer negExamplesLimit = predicateSpecification.getGraph().getNegativeExamplesLimit();
       negExamplesLimit = negExamplesLimit == null ? -1 : negExamplesLimit;
+
+      // set configuration parameters
+      ApiServiceUtils.setConfigurationParameter(predicateSpecification);
       LOGGER.info(
           "Computing positive and negative examples for predicates '{}' with: subjType '{}', objType '{}', posLimit '{}', negLimit '{}'.",
           targetPredicates, subType, objType, posExamplesLimit, negExamplesLimit);
@@ -120,6 +123,8 @@ public class ExampleApiServiceImpl extends ExampleApiService {
           "Target predicates cannont be null or empty.");
     }
     try {
+      // set configuration parameters
+      ApiServiceUtils.setConfigurationParameter(predicateSpecification);
       LOGGER.info("Computing subject and object type for predicate '{}'.", targetPredicates.get(0));
       // compute subject and object type
       final KBPredicateSelector predicateSel = new SparqlKBPredicateSelector();

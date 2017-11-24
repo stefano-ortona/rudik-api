@@ -7,17 +7,17 @@ import asu.edu.rule_miner.api.service.Pair;
 
 import javax.ws.rs.core.GenericType;
 
-import asu.edu.api.model.ErrorModel;
-import asu.edu.api.model.RuleSpecification;
-import asu.edu.api.model.RuleExample;
-import asu.edu.api.model.EntityPair;
+import asu.edu.rule_miner.api.model.ErrorModel;
+import asu.edu.rule_miner.api.model.RuleSpecification;
+import asu.edu.rule_miner.api.model.RuleExample;
+import asu.edu.rule_miner.api.model.EntityPair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-08T13:58:07.522Z")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-24T18:17:08.173Z")
 public class ExampleApi {
   private ApiClient apiClient;
 
@@ -39,7 +39,7 @@ public class ExampleApi {
 
   /**
    * Positive and Negative Example Generation
-   * Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used.
+   * Generate positive and negative examples for the given target predicate. If types of subject and/or object are not specified, then the most common ones from the graph will be used. If more than one target relation is specified, then only the first predicate will be used for the generation.
    * @param predicateSpecification Specifies the input target predicate for which positive and negative examples will be generated. (required)
    * @return RuleExample
    * @throws ApiException if fails to make API call

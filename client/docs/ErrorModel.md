@@ -4,7 +4,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**code** | **Long** |  | 
+**code** | **Integer** |  | 
 **message** | **String** |  | 
 
 

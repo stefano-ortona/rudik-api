@@ -1,25 +1,5 @@
 package asu.edu.rule_miner.api.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -40,20 +20,43 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
-import asu.edu.rule_miner.api.service.auth.ApiKeyAuth;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
+
+import java.net.URLEncoder;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import asu.edu.rule_miner.api.service.auth.Authentication;
 import asu.edu.rule_miner.api.service.auth.HttpBasicAuth;
+import asu.edu.rule_miner.api.service.auth.ApiKeyAuth;
 import asu.edu.rule_miner.api.service.auth.OAuth;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-08T13:58:07.522Z")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-24T18:17:08.173Z")
 public class ApiClient {
-  private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
-  private String basePath = "http://localhost:8080/v1/rudik";
+  private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
+  private String basePath = "http://localhost:8100/v1/apis/rudik";
   private boolean debugging = false;
   private int connectionTimeout = 0;
 
   private Client httpClient;
-  private final JSON json;
+  private JSON json;
   private String tempFolderPath = null;
 
   private Map<String, Authentication> authentications;
@@ -145,7 +148,7 @@ public class ApiClient {
    * Helper method to set username for the first HTTP basic authentication.
    */
   public void setUsername(String username) {
-    for (final Authentication auth : authentications.values()) {
+    for (Authentication auth : authentications.values()) {
       if (auth instanceof HttpBasicAuth) {
         ((HttpBasicAuth) auth).setUsername(username);
         return;
@@ -158,7 +161,7 @@ public class ApiClient {
    * Helper method to set password for the first HTTP basic authentication.
    */
   public void setPassword(String password) {
-    for (final Authentication auth : authentications.values()) {
+    for (Authentication auth : authentications.values()) {
       if (auth instanceof HttpBasicAuth) {
         ((HttpBasicAuth) auth).setPassword(password);
         return;
@@ -171,7 +174,7 @@ public class ApiClient {
    * Helper method to set API key value for the first API key authentication.
    */
   public void setApiKey(String apiKey) {
-    for (final Authentication auth : authentications.values()) {
+    for (Authentication auth : authentications.values()) {
       if (auth instanceof ApiKeyAuth) {
         ((ApiKeyAuth) auth).setApiKey(apiKey);
         return;
@@ -184,7 +187,7 @@ public class ApiClient {
    * Helper method to set API key prefix for the first API key authentication.
    */
   public void setApiKeyPrefix(String apiKeyPrefix) {
-    for (final Authentication auth : authentications.values()) {
+    for (Authentication auth : authentications.values()) {
       if (auth instanceof ApiKeyAuth) {
         ((ApiKeyAuth) auth).setApiKeyPrefix(apiKeyPrefix);
         return;
@@ -197,7 +200,7 @@ public class ApiClient {
    * Helper method to set access token for the first OAuth2 authentication.
    */
   public void setAccessToken(String accessToken) {
-    for (final Authentication auth : authentications.values()) {
+    for (Authentication auth : authentications.values()) {
       if (auth instanceof OAuth) {
         ((OAuth) auth).setAccessToken(accessToken);
         return;
@@ -245,8 +248,9 @@ public class ApiClient {
   }
 
   /**
-   * The path of temporary folder used to store downloaded files from endpoints with file response. The default value is
-   * <code>null</code>, i.e. using the system's default tempopary folder.
+   * The path of temporary folder used to store downloaded files from endpoints
+   * with file response. The default value is <code>null</code>, i.e. using
+   * the system's default tempopary folder.
    *
    * @see https://docs.oracle.com/javase/7/docs/api/java/io/File.html#createTempFile(java.lang.String,%20java.lang.String,%20java.io.File)
    */
@@ -267,7 +271,8 @@ public class ApiClient {
   }
 
   /**
-   * Set the connect timeout (in milliseconds). A value of 0 means no timeout, otherwise values must be between 1 and
+   * Set the connect timeout (in milliseconds).
+   * A value of 0 means no timeout, otherwise values must be between 1 and
    * {@link Integer#MAX_VALUE}.
    */
   public ApiClient setConnectTimeout(int connectionTimeout) {
@@ -299,7 +304,7 @@ public class ApiClient {
   public Date parseDate(String str) {
     try {
       return dateFormat.parse(str);
-    } catch (final java.text.ParseException e) {
+    } catch (java.text.ParseException e) {
       throw new RuntimeException(e);
     }
   }
@@ -320,9 +325,9 @@ public class ApiClient {
     } else if (param instanceof Date) {
       return formatDate((Date) param);
     } else if (param instanceof Collection) {
-      final StringBuilder b = new StringBuilder();
-      for (final Object o : (Collection) param) {
-        if (b.length() > 0) {
+      StringBuilder b = new StringBuilder();
+      for(Object o : (Collection)param) {
+        if(b.length() > 0) {
           b.append(",");
         }
         b.append(String.valueOf(o));
@@ -334,15 +339,13 @@ public class ApiClient {
   }
 
   /*
-   * Format to {@code Pair} objects.
-   */
-  public List<Pair> parameterToPairs(String collectionFormat, String name, Object value) {
-    final List<Pair> params = new ArrayList<Pair>();
+    Format to {@code Pair} objects.
+  */
+  public List<Pair> parameterToPairs(String collectionFormat, String name, Object value){
+    List<Pair> params = new ArrayList<Pair>();
 
     // preconditions
-    if ((name == null) || name.isEmpty() || (value == null)) {
-      return params;
-    }
+    if (name == null || name.isEmpty() || value == null) return params;
 
     Collection valueCollection = null;
     if (value instanceof Collection) {
@@ -352,17 +355,16 @@ public class ApiClient {
       return params;
     }
 
-    if (valueCollection.isEmpty()) {
+    if (valueCollection.isEmpty()){
       return params;
     }
 
     // get the collection format
-    collectionFormat = ((collectionFormat == null) || collectionFormat.isEmpty() ? "csv" : collectionFormat); // default:
-                                                                                                              // csv
+    collectionFormat = (collectionFormat == null || collectionFormat.isEmpty() ? "csv" : collectionFormat); // default: csv
 
     // create the params based on the collection format
     if (collectionFormat.equals("multi")) {
-      for (final Object item : valueCollection) {
+      for (Object item : valueCollection) {
         params.add(new Pair(name, parameterToString(item)));
       }
 
@@ -381,8 +383,8 @@ public class ApiClient {
       delimiter = "|";
     }
 
-    final StringBuilder sb = new StringBuilder();
-    for (final Object item : valueCollection) {
+    StringBuilder sb = new StringBuilder() ;
+    for (Object item : valueCollection) {
       sb.append(delimiter);
       sb.append(parameterToString(item));
     }
@@ -393,26 +395,30 @@ public class ApiClient {
   }
 
   /**
-   * Check if the given MIME is a JSON MIME. JSON MIME examples: application/json application/json; charset=UTF8
-   * APPLICATION/JSON
+   * Check if the given MIME is a JSON MIME.
+   * JSON MIME examples:
+   *   application/json
+   *   application/json; charset=UTF8
+   *   APPLICATION/JSON
    */
   public boolean isJsonMime(String mime) {
-    return (mime != null) && mime.matches("(?i)application\\/json(;.*)?");
+    return mime != null && mime.matches("(?i)application\\/json(;.*)?");
   }
 
   /**
-   * Select the Accept header's value from the given accepts array: if JSON exists in the given array, use it; otherwise
-   * use all of them (joining into a string)
+   * Select the Accept header's value from the given accepts array:
+   *   if JSON exists in the given array, use it;
+   *   otherwise use all of them (joining into a string)
    *
    * @param accepts The accepts array to select from
-   * @return The Accept header to use. If the given array is empty, null will be returned (not to set the Accept header
-   *         explicitly).
+   * @return The Accept header to use. If the given array is empty,
+   *   null will be returned (not to set the Accept header explicitly).
    */
   public String selectHeaderAccept(String[] accepts) {
     if (accepts.length == 0) {
       return null;
     }
-    for (final String accept : accepts) {
+    for (String accept : accepts) {
       if (isJsonMime(accept)) {
         return accept;
       }
@@ -421,17 +427,19 @@ public class ApiClient {
   }
 
   /**
-   * Select the Content-Type header's value from the given array: if JSON exists in the given array, use it; otherwise
-   * use the first one of the array.
+   * Select the Content-Type header's value from the given array:
+   *   if JSON exists in the given array, use it;
+   *   otherwise use the first one of the array.
    *
    * @param contentTypes The Content-Type array to select from
-   * @return The Content-Type header to use. If the given array is empty, JSON will be used.
+   * @return The Content-Type header to use. If the given array is empty,
+   *   JSON will be used.
    */
   public String selectHeaderContentType(String[] contentTypes) {
     if (contentTypes.length == 0) {
       return "application/json";
     }
-    for (final String contentType : contentTypes) {
+    for (String contentType : contentTypes) {
       if (isJsonMime(contentType)) {
         return contentType;
       }
@@ -445,34 +453,34 @@ public class ApiClient {
   public String escapeString(String str) {
     try {
       return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
-    } catch (final UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException e) {
       return str;
     }
   }
 
   /**
-   * Serialize the given Java object into string entity according the given Content-Type (only JSON is supported for
-   * now).
+   * Serialize the given Java object into string entity according the given
+   * Content-Type (only JSON is supported for now).
    */
   public Entity<?> serialize(Object obj, Map<String, Object> formParams, String contentType) throws ApiException {
     Entity<?> entity = null;
     if (contentType.startsWith("multipart/form-data")) {
-      final MultiPart multiPart = new MultiPart();
-      for (final Entry<String, Object> param : formParams.entrySet()) {
+      MultiPart multiPart = new MultiPart();
+      for (Entry<String, Object> param: formParams.entrySet()) {
         if (param.getValue() instanceof File) {
-          final File file = (File) param.getValue();
-          final FormDataContentDisposition contentDisp = FormDataContentDisposition.name(param.getKey())
+          File file = (File) param.getValue();
+          FormDataContentDisposition contentDisp = FormDataContentDisposition.name(param.getKey())
               .fileName(file.getName()).size(file.length()).build();
           multiPart.bodyPart(new FormDataBodyPart(contentDisp, file, MediaType.APPLICATION_OCTET_STREAM_TYPE));
         } else {
-          final FormDataContentDisposition contentDisp = FormDataContentDisposition.name(param.getKey()).build();
+          FormDataContentDisposition contentDisp = FormDataContentDisposition.name(param.getKey()).build();
           multiPart.bodyPart(new FormDataBodyPart(contentDisp, parameterToString(param.getValue())));
         }
       }
       entity = Entity.entity(multiPart, MediaType.MULTIPART_FORM_DATA_TYPE);
     } else if (contentType.startsWith("application/x-www-form-urlencoded")) {
-      final Form form = new Form();
-      for (final Entry<String, Object> param : formParams.entrySet()) {
+      Form form = new Form();
+      for (Entry<String, Object> param: formParams.entrySet()) {
         form.param(param.getKey(), parameterToString(param.getValue()));
       }
       entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
@@ -487,7 +495,7 @@ public class ApiClient {
    * Deserialize response body to Java object according to the Content-Type.
    */
   public <T> T deserialize(Response response, GenericType<T> returnType) throws ApiException {
-    if ((response == null) || (returnType == null)) {
+    if (response == null || returnType == null) {
       return null;
     }
 
@@ -497,18 +505,16 @@ public class ApiClient {
     } else if (returnType.equals(File.class)) {
       // Handle file downloading.
       @SuppressWarnings("unchecked")
-      final T file = (T) downloadFileFromResponse(response);
+      T file = (T) downloadFileFromResponse(response);
       return file;
     }
 
     String contentType = null;
-    final List<Object> contentTypes = response.getHeaders().get("Content-Type");
-    if ((contentTypes != null) && !contentTypes.isEmpty()) {
+    List<Object> contentTypes = response.getHeaders().get("Content-Type");
+    if (contentTypes != null && !contentTypes.isEmpty())
       contentType = String.valueOf(contentTypes.get(0));
-    }
-    if (contentType == null) {
+    if (contentType == null)
       throw new ApiException(500, "missing Content-Type in response");
-    }
 
     return response.readEntity(returnType);
   }
@@ -519,24 +525,23 @@ public class ApiClient {
    */
   public File downloadFileFromResponse(Response response) throws ApiException {
     try {
-      final File file = prepareDownloadFile(response);
+      File file = prepareDownloadFile(response);
       Files.copy(response.readEntity(InputStream.class), file.toPath());
       return file;
-    } catch (final IOException e) {
+    } catch (IOException e) {
       throw new ApiException(e);
     }
   }
 
   public File prepareDownloadFile(Response response) throws IOException {
     String filename = null;
-    final String contentDisposition = (String) response.getHeaders().getFirst("Content-Disposition");
-    if ((contentDisposition != null) && !"".equals(contentDisposition)) {
+    String contentDisposition = (String) response.getHeaders().getFirst("Content-Disposition");
+    if (contentDisposition != null && !"".equals(contentDisposition)) {
       // Get filename from the Content-Disposition header.
-      final Pattern pattern = Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-      final Matcher matcher = pattern.matcher(contentDisposition);
-      if (matcher.find()) {
+      Pattern pattern = Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
+      Matcher matcher = pattern.matcher(contentDisposition);
+      if (matcher.find())
         filename = matcher.group(1);
-      }
     }
 
     String prefix = null;
@@ -545,7 +550,7 @@ public class ApiClient {
       prefix = "download-";
       suffix = "";
     } else {
-      final int pos = filename.lastIndexOf(".");
+      int pos = filename.lastIndexOf(".");
       if (pos == -1) {
         prefix = filename + "-";
       } else {
@@ -553,16 +558,14 @@ public class ApiClient {
         suffix = filename.substring(pos);
       }
       // File.createTempFile requires the prefix to be at least three characters long
-      if (prefix.length() < 3) {
+      if (prefix.length() < 3)
         prefix = "download-";
-      }
     }
 
-    if (tempFolderPath == null) {
+    if (tempFolderPath == null)
       return File.createTempFile(prefix, suffix);
-    } else {
+    else
       return File.createTempFile(prefix, suffix, new File(tempFolderPath));
-    }
   }
 
   /**
@@ -580,9 +583,7 @@ public class ApiClient {
    * @param returnType The return type into which to deserialize the response
    * @return The response body in type of string
    */
-  public <T> T invokeAPI(String path, String method, List<Pair> queryParams, Object body,
-      Map<String, String> headerParams, Map<String, Object> formParams, String accept, String contentType,
-      String[] authNames, GenericType<T> returnType) throws ApiException {
+  public <T> T invokeAPI(String path, String method, List<Pair> queryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String accept, String contentType, String[] authNames, GenericType<T> returnType) throws ApiException {
     updateParamsForAuth(authNames, queryParams, headerParams);
 
     // Not using `.target(this.basePath).path(path)` below,
@@ -590,7 +591,7 @@ public class ApiClient {
     WebTarget target = httpClient.target(this.basePath + path);
 
     if (queryParams != null) {
-      for (final Pair queryParam : queryParams) {
+      for (Pair queryParam : queryParams) {
         if (queryParam.getValue() != null) {
           target = target.queryParam(queryParam.getName(), queryParam.getValue());
         }
@@ -599,23 +600,23 @@ public class ApiClient {
 
     Invocation.Builder invocationBuilder = target.request().accept(accept);
 
-    for (final String key : headerParams.keySet()) {
-      final String value = headerParams.get(key);
+    for (String key : headerParams.keySet()) {
+      String value = headerParams.get(key);
       if (value != null) {
         invocationBuilder = invocationBuilder.header(key, value);
       }
     }
 
-    for (final String key : defaultHeaderMap.keySet()) {
+    for (String key : defaultHeaderMap.keySet()) {
       if (!headerParams.containsKey(key)) {
-        final String value = defaultHeaderMap.get(key);
+        String value = defaultHeaderMap.get(key);
         if (value != null) {
           invocationBuilder = invocationBuilder.header(key, value);
         }
       }
     }
 
-    final Entity<?> entity = serialize(body, formParams, contentType);
+    Entity<?> entity = serialize(body, formParams, contentType);
 
     Response response = null;
 
@@ -637,11 +638,10 @@ public class ApiClient {
     if (response.getStatus() == Status.NO_CONTENT.getStatusCode()) {
       return null;
     } else if (response.getStatusInfo().getFamily().equals(Status.Family.SUCCESSFUL)) {
-      if (returnType == null) {
+      if (returnType == null)
         return null;
-      } else {
+      else
         return deserialize(response, returnType);
-      }
     } else {
       String message = "error";
       String respBody = null;
@@ -649,11 +649,15 @@ public class ApiClient {
         try {
           respBody = String.valueOf(response.readEntity(String.class));
           message = respBody;
-        } catch (final RuntimeException e) {
+        } catch (RuntimeException e) {
           // e.printStackTrace();
         }
       }
-      throw new ApiException(response.getStatus(), message, buildResponseHeaders(response), respBody);
+      throw new ApiException(
+        response.getStatus(),
+        message,
+        buildResponseHeaders(response),
+        respBody);
     }
   }
 
@@ -672,11 +676,11 @@ public class ApiClient {
   }
 
   private Map<String, List<String>> buildResponseHeaders(Response response) {
-    final Map<String, List<String>> responseHeaders = new HashMap<String, List<String>>();
-    for (final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
-      final List<Object> values = entry.getValue();
-      final List<String> headers = new ArrayList<String>();
-      for (final Object o : values) {
+    Map<String, List<String>> responseHeaders = new HashMap<String, List<String>>();
+    for (Entry<String, List<Object>> entry: response.getHeaders().entrySet()) {
+      List<Object> values = entry.getValue();
+      List<String> headers = new ArrayList<String>();
+      for (Object o : values) {
         headers.add(String.valueOf(o));
       }
       responseHeaders.put(entry.getKey(), headers);
@@ -690,11 +694,9 @@ public class ApiClient {
    * @param authNames The authentications to apply
    */
   private void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
-    for (final String authName : authNames) {
-      final Authentication auth = authentications.get(authName);
-      if (auth == null) {
-        throw new RuntimeException("Authentication undefined: " + authName);
-      }
+    for (String authName : authNames) {
+      Authentication auth = authentications.get(authName);
+      if (auth == null) throw new RuntimeException("Authentication undefined: " + authName);
       auth.applyToParams(queryParams, headerParams);
     }
   }

@@ -3,7 +3,7 @@ package asu.edu.rule_miner.api;
 import javax.xml.bind.annotation.XmlTransient;
 
 @javax.xml.bind.annotation.XmlRootElement
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-11-08T12:52:36.960Z")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-11-20T17:54:27.167Z")
 public class ApiResponseMessage {
     public static final int ERROR = 1;
     public static final int WARNING = 2;

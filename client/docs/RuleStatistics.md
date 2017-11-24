@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **validationQueries** | **Integer** | Total number of executed validation queries. |  [optional]
 **expansionTotTime** | **Double** | Total time spent for executing expansion queries in seconds. |  [optional]
 **expansionAvgTime** | **Double** | Average time spent for executing expansion queries in seconds. |  [optional]
+**expansionQueries** | **Integer** | Total number of executed expansion queries. |  [optional]
 **positiveExamplesTime** | **Double** | Total time in seconds spent for generating positive examples. |  [optional]
 **negativeExamplesTime** | **Double** | Total time in seconds spent for generating negative examples. |  [optional]
 **runTime** | **Double** | Total running time in seconds spent for rules induction. |  [optional]
