@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asu.edu.rule_miner.api.impl.configuration.ConfigurationFacility;
+import asu.edu.rule_miner.api.impl.utils.JsonMapperUtils;
+import io.swagger.util.Json;
 
 public class Main {
 
@@ -47,6 +49,9 @@ public class Main {
     restEasyServlet.setInitParameter("resteasy.servlet.mapping.prefix", FatJarApplication.APPLICATION_PATH);
     restEasyServlet.setInitParameter("javax.ws.rs.Application", FatJarApplication.class.getCanonicalName());
     context.addServlet(restEasyServlet, FatJarApplication.APPLICATION_PATH + "/*");
+
+    // modify swagger Json mapper for correct input reading
+    JsonMapperUtils.incudeMapperProperties(Json.mapper());
 
     // Setup the DefaultServlet at "/".
     final ServletHolder defaultServlet = new ServletHolder(new DefaultServlet());

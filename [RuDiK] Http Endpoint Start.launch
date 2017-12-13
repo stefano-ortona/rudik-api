@@ -9,10 +9,10 @@
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
 <mapEntry key="APPLICATION_CONFIGURATION" value="src/main/config/ApplicationConfiguration.xml"/>
 <mapEntry key="RULES_S3_BUCKET" value="fhai-rudik-output-rules"/>
-<mapEntry key="DBPEDIA_SPARQL_ENDPOINT" value="http://dbpedia.org/sparql"/>
+<mapEntry key="DBPEDIA_SPARQL_ENDPOINT" value="http://localhost:8890/sparql"/>
 <mapEntry key="FREEBASE_SPARQL_ENDPOINT" value="http://localhost:8890/sparql"/>
-<mapEntry key="YAGO_SPARQL_ENDPOINT" value="https://io.datascience-paris-saclay.fr/sparql"/>
-<mapEntry key="WIKIDATA_SPARQL_ENDPOINT" value="https://query.wikidata.org/"/>
+<mapEntry key="YAGO_SPARQL_ENDPOINT" value="http://localhost:8890/sparql"/>
+<mapEntry key="WIKIDATA_SPARQL_ENDPOINT" value="http://localhost:8890/sparql"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="asu.edu.rule_miner.api.Main"/>

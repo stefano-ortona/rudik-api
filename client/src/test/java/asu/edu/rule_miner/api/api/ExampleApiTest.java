@@ -21,8 +21,8 @@ package asu.edu.rule_miner.api.api;
 
 import org.junit.Test;
 
-import asu.edu.api.model.RuleExample;
-import asu.edu.api.model.RuleSpecification;
+import asu.edu.rule_miner.api.model.RuleExample;
+import asu.edu.rule_miner.api.model.RuleSpecification;
 import asu.edu.rule_miner.api.service.ApiException;
 
 /**

@@ -1,0 +1,1 @@
+{ "targetRelation": [ "http://dbpedia.org/ontology/child" ], "type": "positive", "graph": { "name": "dbpedia", "targetPrefix":["http://dbpedia.org/ontology/"], "incomingEdges": 2000, "outgoingEdges": 2000, "literal": true, "genericType": [ "http://dbpedia.org/ontology/Agent" ] }, "maxLength": 3 }

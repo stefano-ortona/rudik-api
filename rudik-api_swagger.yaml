@@ -390,6 +390,10 @@ definitions:
       id:
         type: string
         description: "ID of the rule result. Currently same one used for the RuleSpecification+TimeStamp of retrieval."
+      timeComputed:
+        description: "Time stamp of when this rule result was computed."
+        type: string
+        format: date-time
       specification:
         $ref: '#/definitions/RuleSpecification'
       statistics:

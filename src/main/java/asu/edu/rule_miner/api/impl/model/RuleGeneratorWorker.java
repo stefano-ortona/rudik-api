@@ -1,6 +1,7 @@
 package asu.edu.rule_miner.api.impl.model;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,7 +133,7 @@ public class RuleGeneratorWorker implements Runnable {
   }
 
   private RuleResult buildResult(final Map<HornRule, Double> ruleResults, final RuleSpecification ruleSpec) {
-    final RuleResult result = new RuleResult();
+    final RuleResult result = new RuleResult().timeComputed(new Date());
     // id is the same of the specification plus current time stamp
     result.setId(buildResultId(ruleSpec));
     result.setSpecification(ruleSpec);

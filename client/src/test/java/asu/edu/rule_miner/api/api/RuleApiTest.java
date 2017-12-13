@@ -19,13 +19,34 @@
 
 package asu.edu.rule_miner.api.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
-import asu.edu.api.model.RuleInstantiation;
-import asu.edu.api.model.RuleResult;
-import asu.edu.api.model.RuleSpecification;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.varia.NullAppender;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import asu.edu.rule_miner.api.model.EntityPair;
+import asu.edu.rule_miner.api.model.RuleInstantiation;
+import asu.edu.rule_miner.api.model.RuleResult;
+import asu.edu.rule_miner.api.model.RuleSpecification;
+import asu.edu.rule_miner.api.model.RuleSpecification.TypeEnum;
+import asu.edu.rule_miner.api.model.RuleStatistics;
 import asu.edu.rule_miner.api.service.ApiException;
+import asu.edu.rule_miner.api.service.JSON;
+import jersey.repackaged.com.google.common.collect.Lists;
+import jersey.repackaged.com.google.common.collect.Maps;
 
 /**
  * API tests for RuleApi
@@ -33,6 +54,26 @@ import asu.edu.rule_miner.api.service.ApiException;
 public class RuleApiTest {
 
   private final RuleApi api = new RuleApi();
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RuleApi.class);
+
+  private final static String RULE_SPEC_TEMPLATE = "rule_spec.json";
+  private final static String EXAMPLE_FOLDER = "examples/";
+  private RuleSpecification ruleSpecTemplate;
+
+  private final static String LOG_FILE = "src/main/config/DefaultLog4j.properties";
+
+  @Before
+  public void bringUp() throws IOException {
+    BasicConfigurator.configure(new NullAppender());
+    PropertyConfigurator.configure(LOG_FILE);
+    // read rule specification template
+    final BufferedReader reader = new BufferedReader(
+        new InputStreamReader(RuleApiTest.class.getResourceAsStream(RULE_SPEC_TEMPLATE)));
+    final String jsonLine = reader.readLine();
+    reader.close();
+    ruleSpecTemplate = new JSON().getContext(RuleSpecification.class).readValue(jsonLine, RuleSpecification.class);
+  }
 
   /**
    * Horn Rules Instantiation over the Graph
@@ -65,6 +106,193 @@ public class RuleApiTest {
     // RuleResult response = api.mineRule(ruleSpecification);
 
     // TODO: test validations
+  }
+
+  @Test
+  public void mineMultipleRulesMultipleTimesRemoteEndpoint() throws ApiException {
+    // final String basePath = "http://wrty-rudik-api.dev.services.fairhair.ai.dev.fairhair.ai/v1/rudik";
+    final String basePath = "http://localhost:8080/v1/rudik";
+    this.api.getApiClient().setBasePath(basePath);
+    mineMultipleRulesMultipleTimes();
+  }
+
+  /**
+   * Compute, for each target relation, positive and negative rules 3 times, and print average running times
+   * for each target predicate, averaged over the 3 runs.
+   * Both positive and negative rules are discovered for each target predicate, and the rule specification is
+   * the same for each predicate, specified in the RuleSpecificationTemplate
+   *
+   * @throws ApiException
+   */
+  @Test
+  public void mineMultipleRulesMultipleTimes() throws ApiException {
+    final List<String> allTargetRelations = Lists.newArrayList();
+    // allTargetRelations.add("http://dbpedia.org/ontology/spouse");
+    // allTargetRelations.add("http://dbpedia.org/ontology/child");
+    allTargetRelations.add("http://dbpedia.org/ontology/successor");
+    // allTargetRelations.add("http://dbpedia.org/ontology/foundedBy");
+    // allTargetRelations.add("http://dbpedia.org/ontology/birthPlace");
+    // allTargetRelations.add("http://dbpedia.org/ontology/country");
+    // allTargetRelations.add("http://dbpedia.org/ontology/occupation");
+    // allTargetRelations.add("http://dbpedia.org/ontology/producer");
+    // allTargetRelations.add("http://dbpedia.org/ontology/director");
+    // allTargetRelations.add("http://dbpedia.org/ontology/influenced");
+    final int retryNumber = 3;
+
+    final Map<String, List<RuleResult>> allResults = Maps.newHashMap();
+    allTargetRelations.forEach(rel -> {
+      allResults.put(rel, Lists.newArrayList());
+    });
+
+    // compute if for positive and negative rules
+    final TypeEnum posNeg[] = new TypeEnum[] { TypeEnum.POSITIVE, TypeEnum.NEGATIVE };
+    for (final TypeEnum oneType : posNeg) {
+      LOGGER.info("Computing output rules for type {}.", oneType);
+      ruleSpecTemplate.setType(oneType);
+      for (int i = 0; i < retryNumber; i++) {
+        final Map<String, Date> rule2submissionTime = Maps.newHashMap();
+        final AtomicInteger curIteration = new AtomicInteger(i);
+        allTargetRelations.forEach(rel -> {
+          LOGGER.info("Submitting minining for relation '{}' at iteration {}...", rel, curIteration.get());
+          modifyRuleSpecTemplate(rel);
+          try {
+            // submit first all jobs
+            submitJob();
+            rule2submissionTime.put(rel, new Date());
+          } catch (final ApiException | InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+          }
+          LOGGER.info("...rule successfuly submitted.");
+        });
+
+        // after submitting, get the results
+        allTargetRelations.forEach(rel -> {
+          LOGGER.info("Retrieving results for relation '{}' at iteration {}...", rel, curIteration.get());
+          modifyRuleSpecTemplate(rel);
+          try {
+            // submit first all jobs
+            final RuleResult res = getResponse(rule2submissionTime.get(rel));
+            allResults.get(rel).add(res);
+          } catch (final ApiException | InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+          }
+          LOGGER.info("...results successfully retrieved.");
+        });
+      }
+
+      // deal with the results
+      allResults.forEach((k, v) -> {
+        dealResult(k, v);
+      });
+    }
+  }
+
+  private void modifyRuleSpecTemplate(final String rel) {
+    ruleSpecTemplate.setTargetRelation(Lists.newArrayList(rel));
+    final List<EntityPair> posExamples = getExamples(EXAMPLE_FOLDER + rel.replaceAll("/", "_") + "_positive");
+    final List<EntityPair> negExamples = getExamples(EXAMPLE_FOLDER + rel.replaceAll("/", "_") + "_negative");
+    if ((posExamples == null) || (negExamples == null) || posExamples.isEmpty() || negExamples.isEmpty()) {
+      LOGGER.warn("Some examples for {} are set to empty.", rel);
+    }
+    ruleSpecTemplate.setPositiveExamples(posExamples);
+    ruleSpecTemplate.setNegativeExamples(negExamples);
+  }
+
+  private void submitJob() throws ApiException, InterruptedException {
+    // retrieve the result
+    while (true) {
+      try {
+        api.mineRule(ruleSpecTemplate, true);
+        return;
+      } catch (final ApiException e) {
+        // instance is busy, keep re-invoking
+        if (!e.getMessage().contains("busy")) {
+          throw e;
+        }
+      }
+      // sleep for 10 seconds
+      Thread.sleep(10000);
+    }
+  }
+
+  private RuleResult getResponse(final Date submissionTime) throws ApiException, InterruptedException {
+    // retrieve the result
+    Object result = null;
+    while ((result == null) || !(result instanceof RuleResult)) {
+      try {
+        result = api.mineRule(ruleSpecTemplate, false);
+        if (result instanceof RuleResult) {
+          // check submission time is compatible
+          final Date timeComputed = ((RuleResult) result).getTimeComputed();
+          if ((timeComputed != null) && timeComputed.before(submissionTime)) {
+            // result has not been computed yet
+            result = null;
+          } else {
+            break;
+          }
+        }
+      } catch (final ApiException e) {
+        // instance is busy, keep re-invoking
+        if (!e.getMessage().contains("busy")) {
+          throw e;
+        }
+      }
+      // sleep for 10 seconds
+      Thread.sleep(10000);
+    }
+    return (RuleResult) result;
+  }
+
+  private void dealResult(final String rel, final List<RuleResult> allResults) {
+    LOGGER.info("+++++++++++++++++ Printing Results for Relation: '{}' +++++++++++++++++", rel);
+    LOGGER.info("Expansion average time:\t{} seconds.", computeAvgTime(allResults, f -> f.getExpansionAvgTime()));
+    LOGGER.info("Expansion tot time:\t{} seconds.", computeAvgTime(allResults, f -> f.getExpansionTotTime()));
+    LOGGER.info("Validation average time:\t{} seconds.", computeAvgTime(allResults, f -> f.getValidationAvgTime()));
+    LOGGER.info("Validation tot time:\t{} seconds.", computeAvgTime(allResults, f -> f.getValidationTotTime()));
+    LOGGER.info("Total running time:\t{} seconds.", computeAvgTime(allResults, f -> f.getRunTime()));
+    // print all running times
+    final StringBuilder allRunningTimes = new StringBuilder();
+    final StringBuilder computedTimes = new StringBuilder();
+    allResults.forEach(res -> {
+      allRunningTimes.append(res.getStatistics().getRunTime()).append("\t");
+      computedTimes.append(res.getTimeComputed()).append("\t");
+    });
+    LOGGER.info("All running times (in seconds):\t{}", allRunningTimes.toString());
+    // print all computed times
+    LOGGER.info("All computed timestamps:\t{}", computedTimes.toString());
+    LOGGER.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  }
+
+  private Double computeAvgTime(final List<RuleResult> allResults, Function<RuleStatistics, Double> function) {
+    final AtomicInteger denominator = new AtomicInteger(0);
+    final double[] cumulativeValue = new double[] { 0 };
+    allResults.forEach(oneRel -> {
+      final RuleStatistics curStats = oneRel.getStatistics();
+      final Double curValue = function.apply(curStats);
+      if (curValue > 0) {
+        denominator.incrementAndGet();
+        cumulativeValue[0] += curValue;
+      }
+    });
+    return denominator.get() != 0 ? cumulativeValue[0] / denominator.get() : 0;
+  }
+
+  private List<EntityPair> getExamples(final String fileName) {
+    final List<EntityPair> allExamples = Lists.newLinkedList();
+    try {
+      final BufferedReader reader = new BufferedReader(
+          new InputStreamReader(RuleApiTest.class.getResourceAsStream(fileName)));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        allExamples.add(new EntityPair().subject(line.split("\t")[0]).object(line.split("\t")[1]));
+      }
+      reader.close();
+    } catch (final Exception e) {
+      e.printStackTrace();
+    }
+    return allExamples.size() > 0 ? allExamples : null;
   }
 
 }

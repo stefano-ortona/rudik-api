@@ -22,29 +22,27 @@
  * limitations under the License.
  */
 
-
 package asu.edu.rule_miner.api.model;
 
-import java.util.Objects;
-import asu.edu.rule_miner.api.model.HornRule;
-import asu.edu.rule_miner.api.model.KeyValuePair;
-import asu.edu.rule_miner.api.model.RuleSpecification;
-import asu.edu.rule_miner.api.model.RuleStatistics;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * RuleResult
  */
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-24T18:17:08.173Z")
-public class RuleResult   {
+public class RuleResult {
   @JsonProperty("id")
   private String id = null;
+
+  @JsonProperty("timeComputed")
+  private Date timeComputed = null;
 
   @JsonProperty("specification")
   private RuleSpecification specification = null;
@@ -63,10 +61,10 @@ public class RuleResult   {
     return this;
   }
 
-   /**
+  /**
    * ID of the rule result. Currently same one used for the RuleSpecification+TimeStamp of retrieval.
    * @return id
-  **/
+   **/
   @ApiModelProperty(example = "null", required = true, value = "ID of the rule result. Currently same one used for the RuleSpecification+TimeStamp of retrieval.")
   public String getId() {
     return id;
@@ -76,15 +74,33 @@ public class RuleResult   {
     this.id = id;
   }
 
+  public RuleResult timeComputed(Date timeComputed) {
+    this.timeComputed = timeComputed;
+    return this;
+  }
+
+  /**
+   * ID of the rule result. Currently same one used for the RuleSpecification+TimeStamp of retrieval.
+   * @return id
+   **/
+  @ApiModelProperty(required = true, value = "Time stamp of when this rule result was computed.")
+  public Date getTimeComputed() {
+    return this.timeComputed;
+  }
+
+  public void setTimeComputed(Date time) {
+    this.timeComputed = time;
+  }
+
   public RuleResult specification(RuleSpecification specification) {
     this.specification = specification;
     return this;
   }
 
-   /**
+  /**
    * Get specification
    * @return specification
-  **/
+   **/
   @ApiModelProperty(example = "null", required = true, value = "")
   public RuleSpecification getSpecification() {
     return specification;
@@ -99,10 +115,10 @@ public class RuleResult   {
     return this;
   }
 
-   /**
+  /**
    * Get statistics
    * @return statistics
-  **/
+   **/
   @ApiModelProperty(example = "null", value = "")
   public RuleStatistics getStatistics() {
     return statistics;
@@ -122,10 +138,10 @@ public class RuleResult   {
     return this;
   }
 
-   /**
+  /**
    * Output logical body rules produced by RuDiK including their statistics.
    * @return rule
-  **/
+   **/
   @ApiModelProperty(example = "null", required = true, value = "Output logical body rules produced by RuDiK including their statistics.")
   public List<HornRule> getRule() {
     return rule;
@@ -145,10 +161,10 @@ public class RuleResult   {
     return this;
   }
 
-   /**
+  /**
    * Metadata includes things like the time of creation, the version of the induction system, …
    * @return metadata
-  **/
+   **/
   @ApiModelProperty(example = "null", value = "Metadata includes things like the time of creation, the version of the induction system, …")
   public List<KeyValuePair> getMetadata() {
     return metadata;
@@ -158,21 +174,18 @@ public class RuleResult   {
     this.metadata = metadata;
   }
 
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if ((o == null) || (getClass() != o.getClass())) {
       return false;
     }
-    RuleResult ruleResult = (RuleResult) o;
-    return Objects.equals(this.id, ruleResult.id) &&
-        Objects.equals(this.specification, ruleResult.specification) &&
-        Objects.equals(this.statistics, ruleResult.statistics) &&
-        Objects.equals(this.rule, ruleResult.rule) &&
-        Objects.equals(this.metadata, ruleResult.metadata);
+    final RuleResult ruleResult = (RuleResult) o;
+    return Objects.equals(this.id, ruleResult.id) && Objects.equals(this.specification, ruleResult.specification)
+        && Objects.equals(this.statistics, ruleResult.statistics) && Objects.equals(this.rule, ruleResult.rule)
+        && Objects.equals(this.metadata, ruleResult.metadata);
   }
 
   @Override
@@ -182,9 +195,9 @@ public class RuleResult   {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
+    final StringBuilder sb = new StringBuilder();
     sb.append("class RuleResult {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    specification: ").append(toIndentedString(specification)).append("\n");
     sb.append("    statistics: ").append(toIndentedString(statistics)).append("\n");
@@ -205,4 +218,3 @@ public class RuleResult   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -22,41 +22,33 @@
  * limitations under the License.
  */
 
-
 package asu.edu.rule_miner.api.api;
 
-import asu.edu.rule_miner.api.service.ApiException;
-import asu.edu.api.model.ErrorModel;
-import asu.edu.api.model.APIStatus;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import asu.edu.rule_miner.api.service.ApiException;
 
 /**
  * API tests for DefaultApi
  */
 public class DefaultApiTest {
 
-    private final DefaultApi api = new DefaultApi();
+  private final DefaultApi api = new DefaultApi();
 
-    
-    /**
-     * Status of APIs
-     *
-     * Retrieves the status of the APIs
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void statusAPITest() throws ApiException {
-        Boolean full = null;
-        // APIStatus response = api.statusAPI(full);
+  /**
+   * Status of APIs
+   *
+   * Retrieves the status of the APIs
+   *
+   * @throws ApiException
+   *          if the Api call fails
+   */
+  @Test
+  public void statusAPITest() throws ApiException {
+    final Boolean full = null;
+    // APIStatus response = api.statusAPI(full);
 
-        // TODO: test validations
-    }
-    
+    // TODO: test validations
+  }
+
 }
